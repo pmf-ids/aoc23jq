@@ -19,3 +19,12 @@ most Unix-like operating systems.
   | to_entries[] | .value = .value[] + 1
 ) as $e (.; .[$e.value] = $e.key)) | map(map(tonumber?) | first * 10 + last)? | add
 ```
+
+## [🖿 02](02) solving [Day 2: Cube Conundrum](https://adventofcode.com/2023/day/2)
+`jq -Rnf solve.jq input.txt`
+```jq
+[inputs | [scan("\\w+") | tonumber? // ["red","green","blue"][[.]][0] + 13] | [_nwise(2)]]
+| map(select(.[1:] | all(first < last))[0][1] // 0),
+  map(reduce(.[1:] | group_by(last)[] | max_by(first)[0]) as $p (1; . * $p))
+| add
+```
