@@ -28,3 +28,14 @@ most Unix-like operating systems.
   map(reduce(.[1:] | group_by(last)[] | max_by(first)[0]) as $p (1; . * $p))
 | add
 ```
+
+## [🖿 03](03) solving [Day 3: Gear Ratios](https://adventofcode.com/2023/day/3)
+`jq -Rnf solve.jq input.txt`
+```jq
+["", inputs, ""] | [("\\d+","[^\\d.]") as $r | [to_entries[] | .value |= [match($r;"g")]]]
+| reduce (first[] | {key} + .value[] | .string |= tonumber) as $n (last; (
+    .[$n.key + (-1,0,1)].value[] | select([-1, .offset - $n.offset, $n.length] | . == sort)
+  ).nums += [$n]) | [.[].value[] | [[.nums[].string],
+    [select(.string == "*").nums | select(length == 2) | first.string * last.string]
+  ]] | transpose[] | add | add
+```
