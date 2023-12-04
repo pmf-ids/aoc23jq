@@ -39,3 +39,12 @@ most Unix-like operating systems.
     [select(.string == "*").nums | select(length == 2) | first.string * last.string]
   ]] | transpose[] | add | add
 ```
+
+## [🖿 04](04) solving [Day 4: Scratchcards](https://adventofcode.com/2023/day/4)
+`jq -Rnf solve.jq input.txt`
+```jq
+[inputs / ":" | last / "|" | map([scan("\\d+")]) | first - (first - last) | length]
+| [map(select(. > 0) - 1 | exp2)],
+  reduce range(length) as $i ([., map(1)]; last[$i + range(first[$i]) + 1] += last[$i])
+| last | add
+```
