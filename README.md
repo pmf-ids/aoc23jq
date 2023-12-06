@@ -63,3 +63,10 @@ most Unix-like operating systems.
     end
   )) | add) | map(first) | min
 ```
+
+## [🖿 06](06) solving [Day 6: Wait For It](https://adventofcode.com/2023/day/6)
+`jq -Rnf solve.jq input.txt`
+```jq
+[inputs | [scan("\\d+")] | [., [add] | map(tonumber)]] | transpose[] | transpose
+| reduce .[] as [$t,$d] (1; . * ($t * $t / 4 - $d | sqrt | round * 2 + $t % 2 - 1))
+```
