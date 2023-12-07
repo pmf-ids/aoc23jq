@@ -70,3 +70,11 @@ most Unix-like operating systems.
 [inputs | [scan("\\d+")] | [., [add] | map(tonumber)]] | transpose[] | transpose
 | reduce .[] as [$t,$d] (1; . * ($t * $t / 4 - $d | sqrt | round * 2 + $t % 2 - 1))
 ```
+
+## [🖿 07](07) solving [Day 7: Camel Cards](https://adventofcode.com/2023/day/7)
+`jq -Rnf solve.jq input.txt`
+```jq
+[inputs/" "] | ("\(1,"J")23456789TJQKA"/"") as $cr | map(first |= (./"" | map($cr[[.]][0])
+  | (group_by(. > 0) | map(group_by(.) | map(-length) | sort) | transpose | map(-add)) + .
+)) | sort | to_entries | map((.key + 1) * (.value | last | tonumber)) | add
+```
