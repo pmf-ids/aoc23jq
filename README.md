@@ -78,3 +78,12 @@ most Unix-like operating systems.
   | (group_by(. > 0) | map(group_by(.) | map(-length) | sort) | transpose | map(-add)) + .
 )) | sort | to_entries | map((.key + 1) * (.value | last | tonumber)) | add
 ```
+
+## [🖿 08](08) solving [Day 8: Haunted Wasteland](https://adventofcode.com/2023/day/8)
+`jq -Rnf solve.jq input.txt`
+```jq
+[inputs] | [first | explode[] % 5] as $nav | INDEX(.[2:][] | [scan("\\w+")]; first) as $map
+| (["AAA","ZZZ"],["A$","Z$"]) as [$a,$z] | $map | reduce (.[][0] | select(test($a)) | [.,0]
+    | until(first | test($z); [$map[first][$nav[(last) % ($nav | length)]], last + 1])[1]
+  ) as $n (1; . * $n / ([., $n] | until(last == 0; [last, first % last]) | first)) # lcm
+```
