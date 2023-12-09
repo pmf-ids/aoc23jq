@@ -87,3 +87,10 @@ most Unix-like operating systems.
     | until(first | test($z); [$map[first][$nav[(last) % ($nav | length)]], last + 1])[1]
   ) as $n (1; . * $n / ([., $n] | until(last == 0; [last, first % last]) | first)) # lcm
 ```
+
+## [🖿 09](09) solving [Day 9: Mirage Maintenance](https://adventofcode.com/2023/day/9)
+`jq -Rnf solve.jq input.txt`
+```jq
+[inputs / " "| map(tonumber)] | ., map(reverse)
+| map([while(any(. != 0); [.[range(length - 1):] | .[1] - .[0]]) | last] | add) | add
+```
