@@ -94,3 +94,12 @@ most Unix-like operating systems.
 [inputs / " "| map(tonumber)] | ., map(reverse)
 | map([while(any(. != 0); [.[range(length - 1):] | .[1] - .[0]]) | last] | add) | add
 ```
+
+## [🖿 11](11) solving [Day 11: Cosmic Expansion](https://adventofcode.com/2023/day/11)
+`jq -Rnf solve.jq input.txt`
+```jq
+[inputs / ""] | [[transpose, .] | [map(map(min == max)[[true]]), reverse] | transpose[]
+  | (reduce first[] as $d ([last[] | 0]; .[$d:][] += 1)) as $ds | [last[] | indices("#")[]]
+  | combinations(2) | select(first < last) | [last - first, $ds[last] - $ds[first]]
+] | transpose | map(add) | first + last * (1, 999999)
+```
