@@ -112,3 +112,17 @@ most Unix-like operating systems.
   | transpose | map(first - last | fabs) | add
 ] | (index($d) // -1) + 1] | 100 * first + last] | add
 ```
+
+## [🖿 14](14) solving [Day 14: Parabolic Reflector Dish](https://adventofcode.com/2023/day/14)
+`jq -Rnf solve.jq input.txt`
+```jq
+def rotate: map(. / "") | transpose | map(reverse | add); # clockwise
+def tilt: rotate | map(. / "#" | map(. / "" | sort | add) | join("#")); # rightward
+def load: rotate | to_entries | map((.key + 1) * (.value | indices("O") | length)) | add;
+
+[inputs] | tilt, (1000000000 as $cycles | [0, {}, .] | until(first == $cycles;
+  [nth(4; last | recurse(tilt)) | ., add] as [$dish, $key] | .[1][$key] as $loop
+  | last = $dish | .[1][$key] //= first
+  | first |= if $loop and ($cycles - .) % (. - $loop) == 1 then $cycles else . + 1 end
+) | last | rotate) | load
+```
