@@ -126,3 +126,17 @@ def load: rotate | to_entries | map((.key + 1) * (.value | indices("O") | length
   | first |= if $loop and ($cycles - .) % (. - $loop) == 1 then $cycles else . + 1 end
 ) | last | rotate) | load
 ```
+
+## [🖿 15](15) solving [Day 15: Lens Library](https://adventofcode.com/2023/day/15)
+`jq -Rf solve.jq input.txt`
+```jq
+def hash: reduce explode[] as $c (0; (. + $c) * 17 % 256);
+
+. / "," | map(hash), (
+  reduce (.[] | [splits("-|=")] | last |= tonumber?) as [$label, $num] ([];
+    .[$label | hash] |= if $num then .[$label] = $num else delpaths([[$label]]) end
+  ) | to_entries | map(
+    (.key + 1) * (.value | to_entries? | to_entries[] | (.key + 1) * .value.value)
+  )
+) | add
+```
